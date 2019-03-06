@@ -13,6 +13,10 @@ class Api_User extends PhalApi_Api {
             'getMultiBaseInfo' => array(
                 'userIds' => array('name' => 'user_ids', 'type' => 'array', 'format' => 'explode', 'require' => true, 'desc' => '用户ID，多个以逗号分割'),
             ),
+            'login' => array(
+                'username' => array('name' => 'username', 'type' => 'string', 'require' => true, 'desc' => '用户名'),
+                'password' => array('name' => 'password', 'type' => 'string',  'require' => true, 'desc' => '密码'),
+            ),
         );
     }
 
@@ -41,6 +45,21 @@ class Api_User extends PhalApi_Api {
                 $userInfo=json_decode("{}");
             $rs[] = $userInfo;
             DI()->tracer->mark('FINISH_GET_INFO');
+        }
+        return $rs;
+    }
+
+    /**
+     * 登录
+     * @desc 登录，success取0或1，ret 401 用户名错，402 密码错
+     */
+    public function login($username,$password) {
+        $domain = new Domain_User();
+        $rs = $domain->login($username,$password);
+        $rtn=array("success"=>0);
+        if($rs) {
+            $rtn['success']=1;
+            $rtn['user_id']=$rs;
         }
         return $rs;
     }

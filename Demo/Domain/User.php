@@ -8,4 +8,5 @@ class Domain_User {
         $rs = $model->getByUserId($userId);
         return $rs;
     }
+
 }
