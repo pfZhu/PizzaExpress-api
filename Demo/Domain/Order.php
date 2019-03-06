@@ -1,4 +1,4 @@
-32<?php
+<?php
 
 class Domain_Order {
 

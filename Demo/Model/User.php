@@ -9,4 +9,10 @@ class Model_User extends PhalApi_Model_NotORM {
             ->fetch();
     }
 
+    public function getAllUsers() {
+        return $this->getORM()
+            ->select('*')
+            ->fetchAll();
+    }
+
 }
