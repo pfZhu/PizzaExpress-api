@@ -31,4 +31,9 @@ class Domain_Order {
         $rs = $model->getUncheckedOrder();
         return $rs;
     }
+
+    public function getOrderList(){
+        $model=new Model_Order();
+        return $model->getOrderList();
+    }
 }
