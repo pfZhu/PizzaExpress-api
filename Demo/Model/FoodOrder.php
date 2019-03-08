@@ -9,6 +9,11 @@ class Model_FoodOrder extends PhalApi_Model_NotORM {
             ->fetchAll();
     }
 
+    public function insertFoodOrder($data) {
+        return $this->getORM()
+            ->insert($data);
+    }
+
 //    public function updateFoodOrder($orderId, $data) {
 //        return $this->getORM()
 //            ->where('orderId = ?', $orderId)

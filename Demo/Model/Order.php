@@ -33,4 +33,8 @@ class Model_Order extends PhalApi_Model_NotORM {
             ->fetch();
     }
 
+    public function insertOrder($data) {
+        return $this->getORM()
+            ->insert($data);
+    }
 }

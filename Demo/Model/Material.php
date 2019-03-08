@@ -14,4 +14,10 @@ class Model_Material extends PhalApi_Model_NotORM {
             ->fetchAll();
     }
 
+    public function reduceAmountById($id, $amount) {
+        return $this->getORM()
+            ->where('id = ?', $id)
+            ->update(array('amount' => new NotORM_Literal("amount - ".$amount)));
+    }
+
 }

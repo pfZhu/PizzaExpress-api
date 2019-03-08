@@ -16,6 +16,14 @@ class Api_Order extends PhalApi_Api {
             ),
             'cancelOrder' => array(
                 'orderId' => array('name' => 'order_id', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '订单ID'),
+            ),
+            'createOrder' => array(
+                'x' => array('name' => 'x', 'type' => 'float', 'require' => true, 'desc' => '用户x坐标'),
+                'y' => array('name' => 'y', 'type' => 'float', 'require' => true, 'desc' => '用户y坐标'),
+                'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID'),
+                'price' => array('name' => 'price', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '订单总价'),
+                'phone' => array('name' => 'phone', 'require' => true, 'desc' => '配送电话'),
+                'food' => array('name' => 'food', 'require' => true, 'desc' => '订单内食品')
             )
         );
     }
@@ -78,6 +86,85 @@ class Api_Order extends PhalApi_Api {
         $domain = new Domain_Order();
         $rs = $domain->getUncheckedOrder();
         return $rs;
+    }
+
+
+    //我校地址: 121.411329,31.233563
+    /**
+     * 根据下单的坐标分配工厂
+     * @param $x double 下单的x坐标
+     * @param $y double 下单的y坐标
+     * @return int 工厂id
+     */
+    public function assignFactory($x, $y) {
+        $X = 121.411329;
+        $Y = 31.233563;
+        if ($x < $X) {
+            if ($y > $Y) {
+                return 1;
+            } else {
+                return 3;
+            }
+        } else {
+            if ($y > $Y) {
+                return 2;
+            } else {
+                return 4;
+            }
+        }
+    }
+
+    /**
+     * 新建一个订单
+     * @desc 填写用户的x、y坐标、用户id、订单价格、配送电话、订单内食品信息，创建新订单  food字段格式：[{"foodId": foodId, "num": num, "price": price}, {...}, {...} , ...]
+     */
+    public function createOrder() {
+        $domain = new Domain_Order();
+        $factoryId = $this->assignFactory($this->x, $this->y);
+        $orderData = array(
+            'userId' => $this->userId,
+            'factoryId' => $factoryId,
+            'price' => $this->price,
+            'phone' => $this->phone,
+            'status' => 0,
+        );
+        $orderId = $domain->insertOrder($orderData);
+        if (!$orderId > 0) {
+            throw new PhalApi_Exception_BadRequest('订单信息插入失败。', 13);
+        }
+        $foodArr = json_decode($this->food);
+        $foodIdArr = array();
+        foreach ($foodArr as $food) {
+            array_push($foodIdArr, $food->foodId);
+            $foodOrderData = array(
+                'orderId' => $orderId,
+                'foodId' => $food->foodId,
+                'num' => $food->num,
+                'price' => $food->price
+            );
+            $rs = $domain->insertFoodOrder($foodOrderData);
+            if ($rs === false) {
+                throw new PhalApi_Exception_BadRequest('订单内食品信息插入失败。', 13);
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * 新建订单后，减少相应工厂内的原料
+     * @desc 新建订单后，减少相应工厂内的原料
+     */
+    public function reduceMaterial($foodIdArr) {
+        $domain = new Domain_Order();
+        foreach ($foodIdArr as $foodId) {
+            $rs = $domain->getMaterialIdAndAmount($foodId);
+            foreach ($rs as $r) {
+                $materialId = $r['materialId'];
+                $amount = $r['amount'];
+                $rs2 = $domain->reduceMaterialAmount($materialId, $amount);
+
+            }
+        }
     }
 
 }
