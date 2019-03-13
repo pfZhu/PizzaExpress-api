@@ -20,4 +20,25 @@ class Model_Material extends PhalApi_Model_NotORM {
             ->update(array('amount' => new NotORM_Literal("amount - ".$amount)));
     }
 
+    public function getMaterialId($materialName, $factoryId) {
+        return $this->getORM()
+            ->select('id')
+            ->where('name = ?', $materialName)
+            ->where('factoryId', $factoryId)
+            ->fetch();
+    }
+
+    public function insertMaterial($data) {
+        return $this->getORM()
+            ->insert($data);
+    }
+
+    public function checkForWarning($materialId, $threshold) {
+        return $this->getORM()
+            ->select('id')
+            ->where('id = ?', $materialId)
+            ->where('amount < ?', $threshold)
+            ->fetch();
+    }
+
 }

@@ -7,16 +7,16 @@
  */
 class Model_FoodMaterial extends PhalApi_Model_NotORM {
 
-    public function getMaterialIdByFood($foodId) {
+    public function getMaterialNameByFood($foodId) {
         return $this->getORM()
-            ->select('materialId')
+            ->select('materialName')
             ->where('foodId = ?', $foodId)
             ->fetchAll();
     }
 
-    public function getMaterialIdAndAmountByFood($foodId) {
+    public function getMaterialNameAndAmountByFood($foodId) {
         return $this->getORM()
-            ->select('materialId, amount')
+            ->select('materialName, amount')
             ->where('foodId = ?', $foodId)
             ->fetchAll();
     }

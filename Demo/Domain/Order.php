@@ -50,9 +50,44 @@ class Domain_Order {
         return $rs;
     }
 
-    public function getMaterialIdAndAmount($foodId) {
+    public function getMaterialNameAndAmount($foodId) {
         $model = new Model_FoodMaterial();
-        $rs = $model->getMaterialIdAndAmountByFood($foodId);
+        $rs = $model->getMaterialNameAndAmountByFood($foodId);
+        return $rs;
+    }
+
+    public function getMaterialId($materialName, $factoryId) {
+        $model = new Model_Material();
+        $rs = $model->getMaterialId($materialName, $factoryId);
+        return $rs;
+    }
+
+    public function insertMaterial($data) {
+        $model = new Model_Material();
+        $rs = $model->insertMaterial($data);
+        return $rs;
+    }
+
+    public function checkForWarning($materialName, $factoryId) {
+        $model = new Model_Threshold();
+        $threshold = $model->getThreshold($materialName);
+        if (!$threshold >= 0) {
+            $threshold = 0;
+        }
+        $model = new Model_Material();
+        $materialId = $model->getMaterialId($materialName, $factoryId);
+        $rs = $model->checkForWarning($materialId, $threshold);
+        return $rs;
+    }
+
+    public function insertWarning($materialName, $factoryId) {
+        $model = new Model_Warning();
+        $isDuplicate = $model->isDuplicate($materialName, $factoryId);
+        if (!$isDuplicate) {
+            $rs = $model->insertWarning($materialName, $factoryId);
+        } else {
+            $rs = 0;
+        }
         return $rs;
     }
 }

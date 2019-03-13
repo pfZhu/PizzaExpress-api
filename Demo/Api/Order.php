@@ -147,6 +147,8 @@ class Api_Order extends PhalApi_Api {
                 throw new PhalApi_Exception_BadRequest('订单内食品信息插入失败。', 13);
             }
         }
+        $this->reduceMaterial($foodIdArr, $factoryId);
+        $this->checkForWarning($foodIdArr, $factoryId);
         return 1;
     }
 
@@ -154,15 +156,61 @@ class Api_Order extends PhalApi_Api {
      * 新建订单后，减少相应工厂内的原料
      * @desc 新建订单后，减少相应工厂内的原料
      */
-    public function reduceMaterial($foodIdArr) {
+    public function reduceMaterial($foodIdArr, $factoryId) {
         $domain = new Domain_Order();
         foreach ($foodIdArr as $foodId) {
-            $rs = $domain->getMaterialIdAndAmount($foodId);
+            $rs = $domain->getMaterialNameAndAmount($foodId);
             foreach ($rs as $r) {
-                $materialId = $r['materialId'];
+                $materialName = $r['materialName'];
                 $amount = $r['amount'];
-                $rs2 = $domain->reduceMaterialAmount($materialId, $amount);
+                $materialId = $domain->getMaterialId($materialName, $factoryId);
+                if (!$materialId > 0) {  //未查询到material表中对应工厂该材料的库存信息，则插入
+                    $rs2 = $this->insertMaterial($factoryId, $materialName, -$amount, 1, null, 1, null);
+                } else {
+                    $rs2 = $domain->reduceMaterialAmount($materialId, $amount);
+                    if ($rs2 === false) {
+                        throw new PhalApi_Exception_BadRequest('更新库存信息失败。', 11);
+                    }
+                }
+            }
+        }
+    }
 
+    public function insertMaterial($factoryId, $name, $amount, $supplierId, $trackId, $status, $checkTime) {
+        $domain = new Domain_Order();
+        $data = array(
+            'factoryId' => $factoryId,
+            'name' => $name,
+            'amount' => $amount,
+            'supplierId' => $supplierId,
+            'trackId' => $trackId,
+            'status' => $status,
+            'checkTime' => $checkTime
+        );
+        $rs = $domain->insertMaterial($data);
+        if ($rs === false) {
+            throw new PhalApi_Exception_BadRequest('创建工厂库存信息失败。', 13);
+        }
+        return $rs;
+    }
+
+    /**
+     * 新建订单后，检查使用了原料的工厂原料是否充足
+     * @desc 新建订单后，检查使用了原料的工厂原料是否充足
+     */
+    public function checkForWarning($foodIdArr, $factoryId) {
+        $domain = new Domain_Order();
+        foreach ($foodIdArr as $foodId) {
+            $rs = $domain->getMaterialNameAndAmount($foodId);
+            foreach ($rs as $r) {
+                $materialName = $r['materialName'];
+                $rs2 = $domain->checkForWarning($materialName, $factoryId);
+                if ($rs2 > 0) {
+                    $rs3 = $domain->insertWarning($materialName, $factoryId);
+                    if ($rs3 === false) {
+                        throw new PhalApi_Exception_BadRequest('创建库存预警信息失败。', 13);
+                    }
+                }
             }
         }
     }
