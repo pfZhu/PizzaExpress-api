@@ -14,4 +14,12 @@ class Model_Threshold extends PhalApi_Model_NotORM {
             ->fetch();
     }
 
+
+
+    public function getThresholdList() {
+        return $this->getORM()
+            ->select('*')
+            ->fetchAll();
+    }
+
 }

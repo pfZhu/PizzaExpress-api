@@ -17,10 +17,4 @@ class Model_Food extends PhalApi_Model_NotORM
         $rs = DI()->notorm->user->queryRows($sql);
         return $rs;
     }
-
-    public function getAllFoods() {
-        return $this->getORM()
-            ->select('*')
-            ->fetchAll();
-    }
 }

@@ -32,6 +32,11 @@ class Domain_Order {
         return $rs;
     }
 
+    public function getOrderList(){
+        $model=new Model_Order();
+        return $model->getOrderList();
+    }
+
     public function insertOrder($orderData) {
         $model = new Model_Order();
         $rs = $model->insertOrder($orderData);
@@ -91,3 +96,4 @@ class Domain_Order {
         return $rs;
     }
 }
+
