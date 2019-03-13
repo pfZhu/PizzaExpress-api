@@ -44,7 +44,7 @@ class Domain_Order {
     }
 
     public function insertFoodOrder($foodOrderData) {
-        $model = new Model_FoodOrder();
+        $model = new _FoodOrder();
         $rs = $model->insertFoodOrder($foodOrderData);
         return $rs;
     }

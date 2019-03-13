@@ -37,4 +37,9 @@ class Model_Order extends PhalApi_Model_NotORM {
         return DI()->notorm->order->queryAll($sql);
     }
 
+    public function insertOrder($data) {
+        return $this->getORM()
+            ->insert($data);
+    }
+
 }
