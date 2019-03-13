@@ -44,8 +44,41 @@ class Api_User extends PhalApi_Api {
                 'new' => array('name' => 'new', 'type' => 'string', 'require' => true, 'desc' => '新密码'),
 
             ),
-
+            'addAddress' => array(
+                'userId' => array('name' => 'userId', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
+                'name' => array('name' => 'name', 'type' => 'string', 'require' => true, 'desc' => '名字'),
+                'gender' => array('name' => 'gender', 'type' => 'string', 'require' => true, 'desc' => '性别'),
+                'text' => array('name' => 'text', 'type' => 'string', 'require' => true, 'desc' => '地址描述'),
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话'),
+                'tag' => array('name' => 'tag', 'type' => 'string', 'require' => true, 'desc' => '标签'),
+            ),
+            'getAddress' => array(
+                'userId' => array('name' => 'userId', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
+            ),
+            'deleteAddress' => array(
+                'addrId' => array('name' => 'addrId', 'type' => 'int', 'require' => true, 'desc' => '地址ID'),
+            ),
+            'changeAddress' => array(
+                'addrId' => array('name' => 'addrId', 'type' => 'int', 'require' => true, 'desc' => '地址ID'),
+                'name' => array('name' => 'name', 'type' => 'string', 'require' => true, 'desc' => '名字'),
+                'gender' => array('name' => 'gender', 'type' => 'string', 'require' => true, 'desc' => '性别'),
+                'text' => array('name' => 'text', 'type' => 'string', 'require' => true, 'desc' => '地址描述'),
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话'),
+                'tag' => array('name' => 'tag', 'type' => 'string', 'require' => true, 'desc' => '标签')
+            ),
         );
+    }
+
+    /**
+     * 修改用户地址
+     * @desc
+     */
+    public function changeAddress() {
+        $model=new Model_Address();
+        $date=new DateTime();
+        $datetime=$date->format("Y-m-d H:i:s");
+        $param=array("name"=>$this->name,"gender"=>$this->gender,"text"=>$this->text,"phone"=>$this->phone,"tag"=>$this->tag,"updateTime"=>$datetime);
+        return $model->changeAddress($this->addrId,$param);
     }
 
     /**
@@ -150,5 +183,34 @@ class Api_User extends PhalApi_Api {
         $rst=$domain->changePassword($this->userId,$this->old,$this->new);
         return $rst;
     }
+
+    /**
+     * 添加地址
+     * @desc
+     */
+    public function addAddress() {
+        $model=new Model_Address();
+        $param=array("gender"=>$this->gender,"phone"=>$this->phone,"tag"=>$this->tag,"name"=>$this->name,"text"=>$this->text,"userId"=>$this->userId);
+        return $model->addAddress($param);
+    }
+    /**
+     * 获取用户地址
+     * @desc
+     */
+    public function getAddress() {
+        $model=new Model_Address();
+        return $model->getAddress($this->userId);
+    }
+
+    /**
+     * 删除用户地址
+     * @desc
+     */
+    public function deleteAddress() {
+        $model=new Model_Address();
+        return $model->deleteAddress($this->addrId);
+    }
+
+
 
 }

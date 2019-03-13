@@ -11,7 +11,13 @@ class Domain_User {
     public function login($username,$password){
         $model=new Model_User();
         $rst=$model->checkUser($username,$password);
-        if($rst)return $rst;//登陆验证成功
+        if($rst) {
+            $userId=$rst['id'];
+            $addrModel=new Model_Address();
+            $addr=$addrModel->getAddress($userId);
+            $rst['address']=$addr;
+            return $rst;//登陆验证成功
+        }
         else{
             $rst=$model->getUserByUsername($username);
             if($rst)return 1;//密码错误

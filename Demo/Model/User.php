@@ -25,12 +25,14 @@ class Model_User extends PhalApi_Model_NotORM {
     }
     public function updateInfo($userId,$nickname,$avatar,$address,$city){
         $date=new DateTime();
+        $datetime=$date->format("Y-m-d H:i:s");
         return $this->getORM()->where("id=?",$userId)
-            ->update(array('nickname'=>$nickname,'avatar'=>$avatar,"address"=>$address,'city'=>$city,"updateTime"=>$date->format("Y-m-d H:i:s")));
+            ->update(array('nickname'=>$nickname,'avatar'=>$avatar,"address"=>$address,'city'=>$city,"updateTime"=>$datetime));
     }
     public function changePassword($userId,$new){
         $date=new DateTime();
         return $this->getORM()->where("id=?",$userId)->update(array('password'=>$new,"updateTime"=>$date->format("Y-m-d H:i:s")));
     }
+
 
 }
