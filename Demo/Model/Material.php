@@ -15,6 +15,15 @@ class Model_Material extends PhalApi_Model_NotORM {
             ->where('id = ?', $id)
             ->update(array('amount' => new NotORM_Literal("amount - ".$amount)));
     }
+    public function addMaterial($param){
+        return $this->getORM()->insert($param);
+    }
+    public function updateMaterial($materialId,$param){
+        return $this->getORM()->where("id=?",$materialId)->update($param);
+    }
+    public function deleteMaterial($materialId){
+        return $this->getORM()->where("id=?",$materialId)->delete();
+    }
 
     public function getMaterialId($materialName, $factoryId) {
         return $this->getORM()
