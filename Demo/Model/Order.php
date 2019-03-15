@@ -32,9 +32,17 @@ class Model_Order extends PhalApi_Model_NotORM {
             ->where('status', -1)
             ->fetch();
     }
+
     public function getOrderList(){
         $sql = 'SELECT * FROM `order`';
         return DI()->notorm->order->queryAll($sql);
+    }
+
+    public function updateOrderMaterialId($materialId, $orderId) {
+        $data = array('materialId' => $materialId);
+        return $this->getORM()
+            ->where('id = ?', $orderId)
+            ->update($data);
     }
 
     public function insertOrder($data) {

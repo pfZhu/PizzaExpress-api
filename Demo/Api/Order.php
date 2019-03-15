@@ -147,7 +147,8 @@ class Api_Order extends PhalApi_Api {
                 throw new PhalApi_Exception_BadRequest('订单内食品信息插入失败。', 13);
             }
         }
-        $this->reduceMaterial($foodIdArr, $factoryId);
+        $materialIdArr = $this->reduceMaterial($foodIdArr, $factoryId);
+        $this->updateOrderMaterialId($materialIdArr, $orderId);
         $this->checkForWarning($foodIdArr, $factoryId);
         return 1;
     }
@@ -158,6 +159,7 @@ class Api_Order extends PhalApi_Api {
      */
     public function reduceMaterial($foodIdArr, $factoryId) {
         $domain = new Domain_Order();
+        $materialIdArr = array();
         foreach ($foodIdArr as $foodId) {
             $rs = $domain->getMaterialNameAndAmount($foodId);
             foreach ($rs as $r) {
@@ -166,7 +168,9 @@ class Api_Order extends PhalApi_Api {
                 $materialId = $domain->getMaterialId($materialName, $factoryId);
                 if (!$materialId > 0) {  //未查询到material表中对应工厂该材料的库存信息，则插入
                     $rs2 = $this->insertMaterial($factoryId, $materialName, -$amount, 1, null, 1, null);
+                    array_push($materialIdArr, $rs2);
                 } else {
+                    array_push($materialIdArr, $materialId);
                     $rs2 = $domain->reduceMaterialAmount($materialId, $amount);
                     if ($rs2 === false) {
                         throw new PhalApi_Exception_BadRequest('更新库存信息失败。', 11);
@@ -174,6 +178,16 @@ class Api_Order extends PhalApi_Api {
                 }
             }
         }
+        return $materialIdArr;
+    }
+
+    public function updateOrderMaterialId($materialIdArr, $orderId) {
+        $domain = new Domain_Order();
+        $rs = $domain->updateOrderMaterialId($materialIdArr, $orderId);
+        if ($rs === false) {
+            throw new PhalApi_Exception_BadRequest('更新订单原料信息失败。', 11);
+        }
+        return $rs;
     }
 
     public function insertMaterial($factoryId, $name, $amount, $supplierId, $trackId, $status, $checkTime) {

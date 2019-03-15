@@ -44,7 +44,7 @@ class Domain_Order {
     }
 
     public function insertFoodOrder($foodOrderData) {
-        $model = new _FoodOrder();
+        $model = new Model_FoodOrder();
         $rs = $model->insertFoodOrder($foodOrderData);
         return $rs;
     }
@@ -82,6 +82,18 @@ class Domain_Order {
         $model = new Model_Material();
         $materialId = $model->getMaterialId($materialName, $factoryId);
         $rs = $model->checkForWarning($materialId, $threshold);
+        return $rs;
+    }
+
+    public function updateOrderMaterialId($materialIdArr, $orderId) {
+        $model = new Model_Order();
+        $materialId = "";
+        foreach ($materialIdArr as $mId) {
+            $mId = $mId['id'];
+            $materialId = $materialId . $mId . ',';
+        }
+        $materialId = rtrim($materialId, ",");
+        $rs = $model->updateOrderMaterialId($materialId, $orderId);
         return $rs;
     }
 
