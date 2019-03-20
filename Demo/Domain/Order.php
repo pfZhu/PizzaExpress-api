@@ -8,6 +8,10 @@ class Domain_Order {
         $rs = $model->getOrderById($orderId);
         $model = new Model_FoodOrder();
         $rs['foodOrder'] = $model->getFoodOrderByOrderId($orderId);
+        $model = new Model_Food();
+        for($i = 0; $i < count($rs['foodOrder']); $i++) {
+            $rs['foodOrder'][$i]['foodName'] = $model->getFoodNameById($rs['foodOrder'][$i]['foodId'])['name'];
+        }
         return $rs;
     }
 //

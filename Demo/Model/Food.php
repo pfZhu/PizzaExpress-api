@@ -17,4 +17,11 @@ class Model_Food extends PhalApi_Model_NotORM
         $rs = DI()->notorm->user->queryRows($sql);
         return $rs;
     }
+
+    public function getFoodNameById($id) {
+        return $this->getORM()
+            ->select('name')
+            ->where('id = ?', $id)
+            ->fetch();
+    }
 }

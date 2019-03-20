@@ -37,6 +37,7 @@ class Api_Order extends PhalApi_Api {
         $rs = $domain->getBaseInfo($this->orderId);
         if(!$rs)
             throw new PhalApi_Exception_BadRequest('获取信息失败。', 12);
+
         return $rs;
     }
 
