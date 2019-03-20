@@ -14,6 +14,13 @@ class Model_Factory extends PhalApi_Model_NotORM {
             ->fetch();
     }
 
+    public function getNameByFactoryId($id) {
+        return $this->getORM()
+            ->select('name')
+            ->where('id = ?', $id)
+            ->fetch();
+    }
+
     public function getAllFactories() {
         return $this->getORM()
             ->select('*')

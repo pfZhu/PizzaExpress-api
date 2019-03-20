@@ -6,6 +6,8 @@ class Domain_Order {
         $orderId = intval($orderId);
         $model = new Model_Order();
         $rs = $model->getOrderById($orderId);
+        $model = new Model_Factory();
+        $rs['factoryName'] = $model->getNameByFactoryId($rs['factoryId'])['name'];
         $model = new Model_FoodOrder();
         $rs['foodOrder'] = $model->getFoodOrderByOrderId($orderId);
         $model = new Model_Food();
@@ -38,7 +40,13 @@ class Domain_Order {
 
     public function getOrderList(){
         $model=new Model_Order();
-        return $model->getOrderList();
+        $rs = $model->getOrderList();
+        for($i = 0; $i < count($rs); $i++) {
+            $orderId = $rs[$i]['id'];
+            $rs[$i]['foodOrder'] = $this->getBaseInfo($orderId)['foodOrder'];
+            $rs[$i]['factoryName'] = $this->getBaseInfo($orderId)['factoryName'];
+        }
+        return $rs;
     }
 
     public function insertOrder($orderData) {
@@ -108,6 +116,16 @@ class Domain_Order {
             $rs = $model->insertWarning($materialName, $factoryId);
         } else {
             $rs = 0;
+        }
+        return $rs;
+    }
+
+    public function getOrderByUserId($userId) {
+        $model = new Model_Order();
+        $ids = $model->getOrderByUserId($userId);
+        $rs = array();
+        foreach($ids as $id) {
+            array_push($rs, $this->getBaseInfo($id['id']));
         }
         return $rs;
     }

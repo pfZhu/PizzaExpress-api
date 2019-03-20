@@ -50,4 +50,11 @@ class Model_Order extends PhalApi_Model_NotORM {
             ->insert($data);
     }
 
+    public function getOrderByUserId($userId) {
+        return $this->getORM()
+            ->select('id')
+            ->where('userId = ?', $userId)
+            ->fetchAll();
+    }
+
 }

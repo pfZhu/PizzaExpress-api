@@ -24,6 +24,9 @@ class Api_Order extends PhalApi_Api {
                 'price' => array('name' => 'price', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '订单总价'),
                 'phone' => array('name' => 'phone', 'require' => true, 'desc' => '配送电话'),
                 'food' => array('name' => 'food', 'require' => true, 'desc' => '订单内食品')
+            ),
+            'getOrderByUserId' => array(
+                'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID')
             )
         );
     }
@@ -228,6 +231,16 @@ class Api_Order extends PhalApi_Api {
                 }
             }
         }
+    }
+
+    /**
+     * 根据userId查询订单信息
+     * @desc 输入userId，返回该用户创建的所有订单信息
+     */
+    public function getOrderByUserId() {
+        $domain = new Domain_Order();
+        $rs = $domain->getOrderByUserId($this->userId);
+        return $rs;
     }
 
 }
