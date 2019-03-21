@@ -23,7 +23,7 @@ class Api_Order extends PhalApi_Api {
                 'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID'),
                 'price' => array('name' => 'price', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '订单总价'),
                 'phone' => array('name' => 'phone', 'require' => true, 'desc' => '配送电话'),
-                'food' => array('name' => 'food', 'require' => true, 'desc' => '订单内食品')
+                'food' => array('name' => 'food', 'type'=>'array', 'require' => true, 'desc' => '订单内食品')
             ),
             'getOrderByUserId' => array(
                 'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID')
