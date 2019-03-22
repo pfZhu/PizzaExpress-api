@@ -20,6 +20,9 @@ class Domain_Food {
 
     public function insertFood($data) {
         $model = new Model_Food();
+        foreach ($data as $d) {
+            DI()->logger->debug("d", $d);
+        }
         $rs = $model->insertFood($data);
         return $rs;
     }
