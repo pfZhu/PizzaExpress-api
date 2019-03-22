@@ -8,9 +8,9 @@ class Domain_User {
         $rs = $model->getByUserId($userId);
         return $rs;
     }
-    public function login($username,$password){
+    public function login($phone,$password){
         $model=new Model_User();
-        $rst=$model->checkUser($username,$password);
+        $rst=$model->checkUser($phone,$password);
         if($rst) {
             $userId=$rst['id'];
             $addrModel=new Model_Address();
@@ -19,7 +19,7 @@ class Domain_User {
             return $rst;//登陆验证成功
         }
         else{
-            $rst=$model->getUserByUsername($username);
+            $rst=$model->getByPhone($phone);
             if($rst)return 1;//密码错误
             else
                 return 2;//用户名错误

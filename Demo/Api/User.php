@@ -14,7 +14,7 @@ class Api_User extends PhalApi_Api {
                 'userIds' => array('name' => 'userIds', 'type' => 'array', 'format' => 'explode', 'require' => true, 'desc' => '用户ID，多个以逗号分割'),
             ),
             'login' => array(
-                'username' => array('name' => 'username', 'type' => 'string', 'require' => true, 'desc' => '用户名'),
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
                 'password' => array('name' => 'password', 'type' => 'string',  'require' => true, 'desc' => '密码'),
             ),
             'logout' => array(
@@ -27,14 +27,14 @@ class Api_User extends PhalApi_Api {
                 'address' => array('name' => 'address', 'type' => 'string', 'require' => true, 'desc' => '地址'),
                 'city' => array('name' => 'city', 'type' => 'string', 'require' => true, 'desc' => '城市')
             ),
-            'register' => array(
-                'username' => array('name' => 'username', 'type' => 'string', 'require' => true, 'desc' => '用户名'),
-                'password'=> array('name' => 'password', 'type' => 'string', 'require' => true, 'desc' => '密码'),
-                'nickname' => array('name' => 'nickname', 'type' => 'string', 'require' => false, 'desc' => '昵称'),
-                'avatar' => array('name' => 'avatar', 'type' => 'string', 'require' => false, 'desc' => '头像'),
-                'address' => array('name' => 'address', 'type' => 'string', 'require' => false, 'desc' => '地址'),
-                'city' => array('name' => 'city', 'type' => 'string', 'require' => false, 'desc' => '城市')
-            ),
+//            'register' => array(
+//                'username' => array('name' => 'username', 'type' => 'string', 'require' => true, 'desc' => '用户名'),
+//                'password'=> array('name' => 'password', 'type' => 'string', 'require' => true, 'desc' => '密码'),
+//                'nickname' => array('name' => 'nickname', 'type' => 'string', 'require' => false, 'desc' => '昵称'),
+//                'avatar' => array('name' => 'avatar', 'type' => 'string', 'require' => false, 'desc' => '头像'),
+//                'address' => array('name' => 'address', 'type' => 'string', 'require' => false, 'desc' => '地址'),
+//                'city' => array('name' => 'city', 'type' => 'string', 'require' => false, 'desc' => '城市')
+//            ),
             'checkPhone' => array(
                 'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
             ),
@@ -161,7 +161,7 @@ class Api_User extends PhalApi_Api {
      */
     public function login() {
         $domain = new Domain_User();
-        $rst = $domain->login($this->username,$this->password);
+        $rst = $domain->login($this->phone,$this->password);
         if($rst==1){
             throw new PhalApi_Exception_BadRequest("密码错误",1);
         }

@@ -8,10 +8,10 @@ class Model_User extends PhalApi_Model_NotORM {
             ->where('id = ?', $userId)
             ->fetch();
     }
-    public function checkUser($username,$password){
+    public function checkUser($phone,$password){
         $rst= $this->getORM()
             ->select('*')
-            ->where('username=?',$username)
+            ->where('phone=?',$phone)
             ->where('password=?',$password)
             ->fetch();
         return $rst;
