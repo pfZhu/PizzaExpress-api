@@ -8,10 +8,10 @@ class Api_User extends PhalApi_Api {
     public function getRules() {
         return array(
             'getBaseInfo' => array(
-                'userId' => array('name' => 'user_id', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID'),
+                'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID'),
             ),
             'getMultiBaseInfo' => array(
-                'userIds' => array('name' => 'user_ids', 'type' => 'array', 'format' => 'explode', 'require' => true, 'desc' => '用户ID，多个以逗号分割'),
+                'userIds' => array('name' => 'userIds', 'type' => 'array', 'format' => 'explode', 'require' => true, 'desc' => '用户ID，多个以逗号分割'),
             ),
             'login' => array(
                 'username' => array('name' => 'username', 'type' => 'string', 'require' => true, 'desc' => '用户名'),
@@ -35,8 +35,8 @@ class Api_User extends PhalApi_Api {
                 'address' => array('name' => 'address', 'type' => 'string', 'require' => false, 'desc' => '地址'),
                 'city' => array('name' => 'city', 'type' => 'string', 'require' => false, 'desc' => '城市')
             ),
-            'checkUsername' => array(
-                'username' => array('name' => 'username', 'type' => 'string', 'require' => true, 'desc' => '用户名'),
+            'checkPhone' => array(
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
             ),
             'changePassword' => array(
                 'userId' => array('name' => 'userId', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
@@ -73,7 +73,25 @@ class Api_User extends PhalApi_Api {
             'loginByVerifyPhone' => array(
                 'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
             ),
+            'loginByVerifyCode' => array(
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
+                'code'=>array('name' => 'code', 'type' => 'string', 'require' => true, 'desc' => '验证码'),
+            ),
         );
+    }
+
+    /**
+     * 通过验证验证码方式登录，返回userId
+     * @desc
+     */
+    public function loginByVerifyCode() {
+        $model=new Model_User();
+        $line=$model->getByPhone($this->phone);
+        if(!$line) {
+            $model->insert(array("phone" => $this->phone));
+            $line = $model->getByPhone($this->phone);
+        }
+        return intval($line["id"]);
     }
 
     /**
@@ -182,12 +200,12 @@ class Api_User extends PhalApi_Api {
     }
 
     /**
-     * 检验用户名是否已存在
+     * 检验电话号码是否已存在
      * @desc 返回值 data=0 不存在 1 已存在
      */
-    public function checkUsername() {
+    public function checkPhone() {
         $domain=new Domain_User();
-        $rst=$domain->checkUsername($this->username);
+        $rst=$domain->checkPhone($this->phone);
         return $rst;
     }
 

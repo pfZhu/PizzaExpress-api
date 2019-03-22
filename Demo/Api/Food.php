@@ -7,8 +7,19 @@ class Api_Food extends PhalApi_Api {
 
     public function getRules() {
         return array(
-            'getFoodList' => array()
+            'getFoodList' => array(),
+            'getCategoryList' => array(),
+
         );
+    }
+
+    /**
+     * 获取视频种类列表
+     * @desc
+     */
+    public function getCategoryList() {
+        $model = new Model_foodCategory();
+        return $model->getAll();
     }
 
     /**
@@ -22,5 +33,7 @@ class Api_Food extends PhalApi_Api {
             $rs=array();
         return $rs;
     }
+
+
 
 }

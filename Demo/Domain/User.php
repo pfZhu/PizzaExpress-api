@@ -53,9 +53,9 @@ class Domain_User {
             throw new PhalApi_Exception_BadRequest("用户名已存在",1);
         return $model->insert($param);
     }
-    public function checkUsername($username){
+    public function checkPhone($phone){
         $model=new Model_User();
-        $rst=$model->getUserByUsername($username);
+        $rst=$model->getByPhone($phone);
         if($rst)return 1;
         return 0;
     }
