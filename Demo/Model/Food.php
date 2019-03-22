@@ -5,7 +5,7 @@ class Model_Food extends PhalApi_Model_NotORM
 
     public function getCategoryList()
     {
-        $sql = 'select * from foodCategory';
+        $sql = 'select * from foodcategory';
         $rs = DI()->notorm->user->queryAll($sql);
         return $rs;
     }
