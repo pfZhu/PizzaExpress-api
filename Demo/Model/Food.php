@@ -24,4 +24,9 @@ class Model_Food extends PhalApi_Model_NotORM
             ->where('id = ?', $id)
             ->fetch();
     }
+
+    public function insertFood($data) {
+        return $this->getORM()
+            ->insert($data);
+    }
 }

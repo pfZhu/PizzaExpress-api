@@ -23,4 +23,12 @@ class Api_Food extends PhalApi_Api {
         return $rs;
     }
 
+    /**
+     *
+     */
+    public function createFood() {
+        $domain = new Domain_Food();
+        
+    }
+
 }

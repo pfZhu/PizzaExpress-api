@@ -17,4 +17,10 @@ class Domain_Food {
         }
         return $rst;
     }
+
+    public function insertFood($data) {
+        $model = new Model_Food();
+        $rs = $model->insertFood($data);
+        return $rs;
+    }
 }
