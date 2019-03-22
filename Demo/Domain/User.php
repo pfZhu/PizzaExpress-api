@@ -69,6 +69,12 @@ class Domain_User {
         $model->changePassword($userId,$new);
         return 0;
     }
-
+    public function checkPhoneNum($phone){
+        $model=new Model_User();
+        $line=$model->getByPhone($phone);
+        if($line && !empty($line['password']))
+            return 0;
+        return 1;
+    }
 
 }

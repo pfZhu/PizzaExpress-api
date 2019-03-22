@@ -33,6 +33,8 @@ class Model_User extends PhalApi_Model_NotORM {
         $date=new DateTime();
         return $this->getORM()->where("id=?",$userId)->update(array('password'=>$new,"updateTime"=>$date->format("Y-m-d H:i:s")));
     }
-
+    public function getByPhone($phone){
+        return $this->getORM()->where("phone=?",$phone)->select('*')->fetch();
+    }
 
 }

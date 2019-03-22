@@ -66,7 +66,34 @@ class Api_User extends PhalApi_Api {
                 'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话'),
                 'tag' => array('name' => 'tag', 'type' => 'string', 'require' => true, 'desc' => '标签')
             ),
+            'checkPhoneNum' => array(
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
+
+            ),
+            'loginByVerifyPhone' => array(
+                'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话号码'),
+            ),
         );
+    }
+
+    /**
+     * 通过验证手机号的方式登录
+     * @desc
+     */
+    public function loginByVerifyPhone() {
+        $model=new Model_User();
+        if(!$model->getByPhone($this->phone))
+            $model->insert(array("phone"=>$this->phone));
+        return 0;
+    }
+
+    /**
+     * 验证手机号码
+     * @desc 验证是否[注册过该手机号&&设置了密码]，是则返回0，否则返回1
+     */
+    public function checkPhoneNum() {
+        $domain=new Domain_User();
+        return $domain->checkPhoneNum($this->phone);
     }
 
     /**
