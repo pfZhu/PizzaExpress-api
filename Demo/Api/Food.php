@@ -20,7 +20,7 @@ class Api_Food extends PhalApi_Api {
      * @desc
      */
     public function getCategoryList() {
-        $model = new Model_foodCategory();
+        $model = new Model_FoodCategory();
         return $model->getAll();
     }
 
