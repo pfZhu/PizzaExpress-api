@@ -8,10 +8,10 @@ class Domain_Food {
 //        DI()->logger->debug("",$cgs);
         $rst=array();
         foreach($cgs as $cg) {
-            $cg=$cg['category'];
+//            $cg=$cg['id'];
             $item = array();
-            $foodList = $model->getFoodsByCategory($cg);
-            $item["category"] = $cg;
+            $foodList = $model->getFoodsByCategory($cg['id']);
+            $item["category"] = $cg['name'];
             $item["foods"] = $foodList;
             $rst[] = $item;
         }
