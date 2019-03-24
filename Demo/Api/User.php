@@ -24,7 +24,6 @@ class Api_User extends PhalApi_Api {
                 'userId' => array('name' => 'userId', 'type' => 'int', 'require' => true, 'desc' => '用户id'),
                 'nickname' => array('name' => 'nickname', 'type' => 'string', 'require' => true, 'desc' => '昵称'),
                 'avatar' => array('name' => 'avatar', 'type' => 'string', 'require' => true, 'desc' => '头像'),
-                'address' => array('name' => 'address', 'type' => 'string', 'require' => true, 'desc' => '地址'),
                 'city' => array('name' => 'city', 'type' => 'string', 'require' => true, 'desc' => '城市')
             ),
 //            'register' => array(
@@ -50,6 +49,8 @@ class Api_User extends PhalApi_Api {
                 'gender' => array('name' => 'gender', 'type' => 'string', 'require' => true, 'desc' => '性别'),
                 'address' => array('name' => 'address', 'type' => 'string', 'require' => true, 'desc' => '地址描述'),
                 'addressDetail' => array('name' => 'addressDetail', 'type' => 'string', 'require' => true, 'desc' => '门牌号'),
+                'lat' => array('name' => 'lat', 'type' => 'float', 'require' => true, 'desc' => '纬度'),
+                'lng' => array('name' => 'lng', 'type' => 'float', 'require' => true, 'desc' => '经度'),
                 'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话'),
                 'tag' => array('name' => 'tag', 'type' => 'string', 'require' => true, 'desc' => '标签'),
             ),
@@ -65,6 +66,8 @@ class Api_User extends PhalApi_Api {
                 'gender' => array('name' => 'gender', 'type' => 'string', 'require' => true, 'desc' => '性别'),
                 'address' => array('name' => 'address', 'type' => 'string', 'require' => true, 'desc' => '地址描述'),
                 'addressDetail' => array('name' => 'addressDetail', 'type' => 'string', 'require' => true, 'desc' => '门牌号'),
+                'lat' => array('name' => 'lat', 'type' => 'float', 'require' => true, 'desc' => '纬度'),
+                'lng' => array('name' => 'lng', 'type' => 'float', 'require' => true, 'desc' => '经度'),
                 'phone' => array('name' => 'phone', 'type' => 'string', 'require' => true, 'desc' => '电话'),
                 'tag' => array('name' => 'tag', 'type' => 'string', 'require' => true, 'desc' => '标签')
             ),
@@ -124,7 +127,7 @@ class Api_User extends PhalApi_Api {
         $model=new Model_Address();
         $date=new DateTime();
         $datetime=$date->format("Y-m-d H:i:s");
-        $param=array("name"=>$this->name,"gender"=>$this->gender,"address"=>$this->address,"addressDetail"=>$this->addressDetail,"phone"=>$this->phone,"tag"=>$this->tag,"updateTime"=>$datetime);
+        $param=array("name"=>$this->name,"gender"=>$this->gender,"address"=>$this->address,"addressDetail"=>$this->addressDetail,"phone"=>$this->phone,"tag"=>$this->tag,"updateTime"=>$datetime,"lat"=>$this->lat,"lng"=>$this->lng);
         return $model->changeAddress($this->addrId,$param);
     }
 
@@ -197,7 +200,7 @@ class Api_User extends PhalApi_Api {
      */
     public function updateInfo() {
         $domain=new Domain_User();
-        $rst=$domain->updateInfo($this->userId,$this->nickname,$this->avatar,$this->address,$this->city);
+        $rst=$domain->updateInfo($this->userId,$this->nickname,$this->avatar,$this->city);
         return intval(!$rst);
     }
 
@@ -211,15 +214,15 @@ class Api_User extends PhalApi_Api {
         return $rst;
     }
 
-    /**
-     * 注册
-     * @desc ret 401 用户名已存在
-     */
-    public function register() {
-        $domain=new Domain_User();
-        $rst=$domain->register($this->username,$this->password,$this->nickname,$this->avatar,$this->address,$this->city);
-        return $rst;
-    }
+//    /**
+//     * 注册
+//     * @desc ret 401 用户名已存在
+//     */
+//    public function register() {
+//        $domain=new Domain_User();
+//        $rst=$domain->register($this->username,$this->password,$this->nickname,$this->avatar,$this->address,$this->city);
+//        return $rst;
+//    }
 
     /**
      * 修改密码
@@ -237,7 +240,7 @@ class Api_User extends PhalApi_Api {
      */
     public function addAddress() {
         $model=new Model_Address();
-        $param=array("gender"=>$this->gender,"phone"=>$this->phone,"tag"=>$this->tag,"name"=>$this->name,"address"=>$this->address,"addressDetail"=>$this->addressDetail,"userId"=>$this->userId);
+        $param=array("gender"=>$this->gender,"phone"=>$this->phone,"tag"=>$this->tag,"name"=>$this->name,"address"=>$this->address,"addressDetail"=>$this->addressDetail,"userId"=>$this->userId,"lat"=>$this->lat,"lng"=>$this->lng);
         return $model->addAddress($param);
     }
     /**
