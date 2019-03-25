@@ -30,9 +30,9 @@ class Domain_User {
         $rst=$model->getByUserId($userId);
         return $rst;
     }
-    public function updateInfo($userId,$nickname,$avatar,$address,$city){
+    public function updateInfo($userId,$nickname,$avatar,$city){
         $model=new Model_User();
-        return $model->updateInfo($userId,$nickname,$avatar,$address,$city);
+        return $model->updateInfo($userId,$nickname,$avatar,$city);
     }
     public function register($username,$password,$nickname,$avatar,$address,$city){
         $param=array();

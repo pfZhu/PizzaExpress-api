@@ -23,11 +23,11 @@ class Model_User extends PhalApi_Model_NotORM {
             ->fetch();
         return $rst;
     }
-    public function updateInfo($userId,$nickname,$avatar,$address,$city){
+    public function updateInfo($userId,$nickname,$avatar,$city){
         $date=new DateTime();
         $datetime=$date->format("Y-m-d H:i:s");
         return $this->getORM()->where("id=?",$userId)
-            ->update(array('nickname'=>$nickname,'avatar'=>$avatar,"address"=>$address,'city'=>$city,"updateTime"=>$datetime));
+            ->update(array('nickname'=>$nickname,'avatar'=>$avatar,'city'=>$city,"updateTime"=>$datetime));
     }
     public function changePassword($userId,$new){
         $date=new DateTime();
