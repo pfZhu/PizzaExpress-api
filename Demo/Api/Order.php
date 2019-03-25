@@ -23,7 +23,7 @@ class Api_Order extends PhalApi_Api {
                 'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID'),
                 'price' => array('name' => 'price', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '订单总价'),
                 'phone' => array('name' => 'phone', 'require' => true, 'desc' => '配送电话'),
-                'food' => array('name' => 'food', 'type'=>'array', 'require' => true, 'desc' => '订单内食品')
+                'food' => array('name' => 'food', 'type' => 'array', 'require' => true, 'format' => 'json', 'desc' => '订单内食品')
             ),
             'getOrderByUserId' => array(
                 'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID')
@@ -136,15 +136,15 @@ class Api_Order extends PhalApi_Api {
         if (!$orderId > 0) {
             throw new PhalApi_Exception_BadRequest('订单信息插入失败。', 13);
         }
-        $foodArr = json_decode($this->food);
+        $foodArr = $this->food;
         $foodIdArr = array();
         foreach ($foodArr as $food) {
-            array_push($foodIdArr, $food->foodId);
+            array_push($foodIdArr, $food['foodId']);
             $foodOrderData = array(
                 'orderId' => $orderId,
-                'foodId' => $food->foodId,
-                'num' => $food->num,
-                'price' => $food->price
+                'foodId' => $food['foodId'],
+                'num' => $food['num'],
+                'price' => $food['price']
             );
             $rs = $domain->insertFoodOrder($foodOrderData);
             if ($rs === false) {

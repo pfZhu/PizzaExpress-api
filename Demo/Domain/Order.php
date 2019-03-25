@@ -100,8 +100,12 @@ class Domain_Order {
     public function updateOrderMaterialId($materialIdArr, $orderId) {
         $model = new Model_Order();
         $materialId = "";
+        $mIdArr = array();
         foreach ($materialIdArr as $mId) {
-            $mId = $mId['id'];
+            array_push($mIdArr, $mId['id']);
+        }
+        $mIdArr = array_unique($mIdArr);
+        foreach ($mIdArr as $mId) {
             $materialId = $materialId . $mId . ',';
         }
         $materialId = rtrim($materialId, ",");
