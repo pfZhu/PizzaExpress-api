@@ -40,7 +40,6 @@ class Api_Order extends PhalApi_Api {
         $rs = $domain->getBaseInfo($this->orderId);
         if(!$rs)
             throw new PhalApi_Exception_BadRequest('获取信息失败。', 12);
-
         return $rs;
     }
 
@@ -154,7 +153,14 @@ class Api_Order extends PhalApi_Api {
         $materialIdArr = $this->reduceMaterial($foodIdArr, $factoryId);
         $this->updateOrderMaterialId($materialIdArr, $orderId);
         $this->checkForWarning($foodIdArr, $factoryId);
-        return 1;
+        $rs = $this->getInfoById($orderId['id']);
+        return $rs;
+    }
+
+    public function getInfoById($orderId) {
+        $domain = new Domain_Order();
+        $rs = $domain->getBaseInfo($orderId);
+        return $rs;
     }
 
     /**
