@@ -136,5 +136,15 @@ class Domain_Order {
         }
         return $rs;
     }
+
+    public function getLng($addressId) {
+        $model = new Model_Address();
+        return $model->getLng($addressId);
+    }
+
+    public function getLat($addressId) {
+        $model = new Model_Address();
+        return $model->getLat($addressId);
+    }
 }
 

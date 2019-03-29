@@ -19,4 +19,12 @@ class Model_Address extends PhalApi_Model_NotORM {
         return $this->getORM()->where("id=?",$addrId)->update($param);
     }
 
+    public function getLng($id) {
+        return $this->getORM()->select('lng')->where("id = ?", $id)->fetch();
+    }
+
+    public function getLat($id) {
+        return $this->getORM()->select('lat')->where("id = ?", $id)->fetch();
+    }
+
 }
