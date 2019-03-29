@@ -6,6 +6,7 @@ class Domain_Order {
         $orderId = intval($orderId);
         $model = new Model_Order();
         $rs = $model->getOrderById($orderId);
+        $addressId = $model->getAddressId($orderId);
         $model = new Model_Factory();
         $rs['factoryName'] = $model->getNameByFactoryId($rs['factoryId'])['name'];
         $model = new Model_FoodOrder();
@@ -14,6 +15,8 @@ class Domain_Order {
         for($i = 0; $i < count($rs['foodOrder']); $i++) {
             $rs['foodOrder'][$i]['foodName'] = $model->getFoodNameById($rs['foodOrder'][$i]['foodId'])['name'];
         }
+        $model = new Model_Address();
+        $rs['address'] = $model->getAddressById($addressId);
         return $rs;
     }
 //

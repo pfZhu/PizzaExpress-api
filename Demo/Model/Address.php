@@ -2,6 +2,10 @@
 
 class Model_Address extends PhalApi_Model_NotORM {
 
+    public function getAddressById($id){
+        return $this->getORM()->select('*')->where("id = ?", $id)->fetch();
+    }
+
     public function getAddress($userId){
         return $this->getORM()->select('*')->where("userId=?",$userId)->fetchAll();
     }
