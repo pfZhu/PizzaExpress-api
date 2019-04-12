@@ -86,9 +86,8 @@ class Api_Storage extends PhalApi_Api {
     public function checkMaterial() {
         $domain = new Domain_Storage();
         $rs = $domain->checkMaterial($this->materialId,$this->status);
-        if ($rs === false) {
-            throw new PhalApi_Exception_BadRequest('更新原料状态失败。', 11);
-        }
-        return $rs;
+        if($rs)
+            return 0;
+        return 1;
     }
 }

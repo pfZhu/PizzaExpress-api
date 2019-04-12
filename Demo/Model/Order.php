@@ -57,11 +57,4 @@ class Model_Order extends PhalApi_Model_NotORM {
             ->fetchAll();
     }
 
-    public function getAddressId($orderId) {
-        return $this->getORM()
-            ->select('addressId')
-            ->where('id = ?', $orderId)
-            ->fetch();
-    }
-
 }

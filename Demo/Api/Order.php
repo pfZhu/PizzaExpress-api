@@ -18,11 +18,12 @@ class Api_Order extends PhalApi_Api {
                 'orderId' => array('name' => 'order_id', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '订单ID'),
             ),
             'createOrder' => array(
+                'x' => array('name' => 'x', 'type' => 'float', 'require' => true, 'desc' => '用户x坐标'),
+                'y' => array('name' => 'y', 'type' => 'float', 'require' => true, 'desc' => '用户y坐标'),
                 'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID'),
                 'price' => array('name' => 'price', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '订单总价'),
                 'phone' => array('name' => 'phone', 'require' => true, 'desc' => '配送电话'),
-                'food' => array('name' => 'food', 'type' => 'array', 'require' => true, 'format' => 'json', 'desc' => '订单内食品'),
-                'addressId' => array('name' => 'addressId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '地址ID')
+                'food' => array('name' => 'food', 'type'=>'array', 'require' => true, 'desc' => '订单内食品')
             ),
             'getOrderByUserId' => array(
                 'userId' => array('name' => 'userId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '用户ID')
@@ -39,6 +40,7 @@ class Api_Order extends PhalApi_Api {
         $rs = $domain->getBaseInfo($this->orderId);
         if(!$rs)
             throw new PhalApi_Exception_BadRequest('获取信息失败。', 12);
+
         return $rs;
     }
 
@@ -118,35 +120,31 @@ class Api_Order extends PhalApi_Api {
 
     /**
      * 新建一个订单
-     * @desc 填写用户id、订单价格、配送电话、订单内食品信息、地址id，创建新订单  food字段格式：[{"foodId": foodId, "num": num, "price": price}, {...}, {...} , ...]
+     * @desc 填写用户的x、y坐标、用户id、订单价格、配送电话、订单内食品信息，创建新订单  food字段格式：[{"foodId": foodId, "num": num, "price": price}, {...}, {...} , ...]
      */
     public function createOrder() {
         $domain = new Domain_Order();
-        $addressId = $this->addressId;
-        $lng = $domain->getLng($addressId);
-        $lat = $domain->getLat($addressId);
-        $factoryId = $this->assignFactory($lng, $lat);
+        $factoryId = $this->assignFactory($this->x, $this->y);
         $orderData = array(
             'userId' => $this->userId,
             'factoryId' => $factoryId,
             'price' => $this->price,
             'phone' => $this->phone,
-            'addressId' => $this->addressId,
             'status' => 0,
         );
         $orderId = $domain->insertOrder($orderData);
         if (!$orderId > 0) {
             throw new PhalApi_Exception_BadRequest('订单信息插入失败。', 13);
         }
-        $foodArr = $this->food;
+        $foodArr = json_decode($this->food);
         $foodIdArr = array();
         foreach ($foodArr as $food) {
-            array_push($foodIdArr, $food['foodId']);
+            array_push($foodIdArr, $food->foodId);
             $foodOrderData = array(
                 'orderId' => $orderId,
-                'foodId' => $food['foodId'],
-                'num' => $food['num'],
-                'price' => $food['price']
+                'foodId' => $food->foodId,
+                'num' => $food->num,
+                'price' => $food->price
             );
             $rs = $domain->insertFoodOrder($foodOrderData);
             if ($rs === false) {
@@ -156,14 +154,7 @@ class Api_Order extends PhalApi_Api {
         $materialIdArr = $this->reduceMaterial($foodIdArr, $factoryId);
         $this->updateOrderMaterialId($materialIdArr, $orderId);
         $this->checkForWarning($foodIdArr, $factoryId);
-        $rs = $this->getInfoById($orderId['id']);
-        return $rs;
-    }
-
-    public function getInfoById($orderId) {
-        $domain = new Domain_Order();
-        $rs = $domain->getBaseInfo($orderId);
-        return $rs;
+        return 1;
     }
 
     /**
