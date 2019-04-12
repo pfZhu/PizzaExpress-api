@@ -49,8 +49,8 @@ class Api_Factory extends PhalApi_Api {
     }
 
     /**
-     * 获取工厂列表
-     * @desc 用于获取工厂列表
+     * 删除工厂
+     * @desc 
      */
     public function deleteFactory() {
         $model=new Model_Factory();
@@ -58,8 +58,8 @@ class Api_Factory extends PhalApi_Api {
     }
 
     /**
-     * 获取工厂列表
-     * @desc 用于获取工厂列表
+     * 修改工厂信息
+     * @desc
      */
     public function updateFactory() {
         $model=new Model_Factory();
