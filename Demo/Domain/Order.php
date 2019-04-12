@@ -6,6 +6,7 @@ class Domain_Order {
         $orderId = intval($orderId);
         $model = new Model_Order();
         $rs = $model->getOrderById($orderId);
+        $addressId = $model->getAddressId($orderId);
         $model = new Model_Factory();
         $rs['factoryName'] = $model->getNameByFactoryId($rs['factoryId'])['name'];
         $model = new Model_FoodOrder();
@@ -14,6 +15,8 @@ class Domain_Order {
         for($i = 0; $i < count($rs['foodOrder']); $i++) {
             $rs['foodOrder'][$i]['foodName'] = $model->getFoodNameById($rs['foodOrder'][$i]['foodId'])['name'];
         }
+        $model = new Model_Address();
+        $rs['address'] = $model->getAddressById($addressId);
         return $rs;
     }
 //
@@ -100,8 +103,12 @@ class Domain_Order {
     public function updateOrderMaterialId($materialIdArr, $orderId) {
         $model = new Model_Order();
         $materialId = "";
+        $mIdArr = array();
         foreach ($materialIdArr as $mId) {
-            $mId = $mId['id'];
+            array_push($mIdArr, $mId['id']);
+        }
+        $mIdArr = array_unique($mIdArr);
+        foreach ($mIdArr as $mId) {
             $materialId = $materialId . $mId . ',';
         }
         $materialId = rtrim($materialId, ",");
@@ -128,6 +135,16 @@ class Domain_Order {
             array_push($rs, $this->getBaseInfo($id['id']));
         }
         return $rs;
+    }
+
+    public function getLng($addressId) {
+        $model = new Model_Address();
+        return $model->getLng($addressId);
+    }
+
+    public function getLat($addressId) {
+        $model = new Model_Address();
+        return $model->getLat($addressId);
     }
 }
 

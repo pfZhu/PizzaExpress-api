@@ -21,4 +21,10 @@ class Model_FoodMaterial extends PhalApi_Model_NotORM {
             ->fetchAll();
     }
 
+    public function insertFoodMaterial($foodId, $data) {
+        $data['foodId'] = $foodId;
+        return $this->getORM()
+            ->insert($data);
+    }
+
 }
