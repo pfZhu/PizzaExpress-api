@@ -1,31 +1,26 @@
 <?php
-/**
- * PhpUnderControl_ApiDefault_Test
- *
- * 针对 ../../Api/Default.php Api_Default 类的PHPUnit单元测试
- *
- * @author: dogstar 20150201
- */
 
+use PHPUnit\Framework\TestCase;
 require_once dirname(__FILE__) . '/../test_env.php';
 
 if (!class_exists('Api_Default')) {
     require dirname(__FILE__) . '/../../Api/Default.php';
 }
 
-class PhpUnderControl_ApiDefault_Test extends PHPUnit_Framework_TestCase
+class PhpUnderControl_ApiDefault_Test extends TestCase
 {
     public $apiDefault;
 
-    protected function setUp()
+    protected function setUp():void
     {
         parent::setUp();
 
         $this->apiDefault = new Api_Default();
     }
 
-    protected function tearDown()
+    protected function tearDown():void
     {
+        unset($this->apiDefault);
     }
 
 
