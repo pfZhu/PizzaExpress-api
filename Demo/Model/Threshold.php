@@ -14,4 +14,13 @@ class Model_Threshold extends PhalApi_Model_NotORM {
             ->where('materialName = ?', $materialName)
             ->fetch();
     }
+    public function addThreshold($param) {
+        return $this->getORM()->insert($param);
+    }
+    public function deleteThreshold($name) {
+        return $this->getORM()->where("materialName=?",$name)->delete();
+    }
+    public function changeThreshold($name,$param) {
+        return $this->getORM()->where("materialName=?",$name)->update($param);
+    }
 }

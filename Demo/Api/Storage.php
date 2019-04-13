@@ -31,10 +31,59 @@ class Api_Storage extends PhalApi_Api {
             'deleteMaterial' => array(
                 "materialId"=>array('name' => 'materialId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '原料ID'),
             ),
+            'addThreshold' => array(
+                "materialName"=>array('name' => 'materialName', 'type' => 'string', 'require' => true, 'desc' => '原料名称（唯一）'),
+                "num"=>array('name' => 'num', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '预警阈值'),
+            ),
+            'deleteThreshold' => array(
+                "materialName"=>array('name' => 'materialName', 'type' => 'string', 'require' => true, 'desc' => '原料名称（唯一）'),
+            ),
+            'changeThreshold' => array(
+                "materialName"=>array('name' => 'materialName', 'type' => 'string', 'require' => true, 'desc' => '原料名称（唯一）'),
+                "num"=>array('name' => 'num', 'type' => 'float', 'min' => 0, 'require' => true, 'desc' => '预警阈值'),
+            ),
+            'getThresholdList' => array(
+            ),
+
 
         );
 
     }
+    /**
+     * 获取所有阈值
+     * @desc
+     */
+    public function getThresholdList() {
+        $model=new Model_Threshold();
+        return $model->getThresholdList();
+    }
+    /**
+     * 根据材料名更新阈值
+     * @desc
+     */
+    public function changeThreshold() {
+        $model=new Model_Threshold();
+        return $model->changeThreshold($this->materialName,array("num"=>$this->num));
+    }
+
+    /**
+     * 删除阈值
+     * @desc
+     */
+    public function deleteThreshold() {
+        $model=new Model_Threshold();
+        return $model->deleteThreshold($this->materialName);
+    }
+
+    /**
+     * 添加原料稀缺预警阈值
+     * @desc
+     */
+    public function addThreshold() {
+        $model=new Model_Threshold();
+        return $model->addThreshold(array("materialName"=>$this->materialName,"num"=>$this->num));
+    }
+
     /**
      * 删除原料
      * @desc
