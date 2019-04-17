@@ -21,12 +21,16 @@ class Api_Storage extends PhalApi_Api {
                 'amount' => array('name' => 'amount', 'type' => 'float',  'require' => true, 'desc' => '数量'),
                 'supplierId' => array('name' => 'supplierId', 'type' => 'int',  'require' => true, 'desc' => '供应商ID'),
             ),
+//            'updateMaterial' => array(
+//                "materialId"=>array('name' => 'materialId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '原料ID'),
+//                'factoryId' => array('name' => 'factoryId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '工厂ID'),
+//                'name' => array('name' => 'name', 'type' => 'string',  'require' => true, 'desc' => '原料名'),
+//                'amount' => array('name' => 'amount', 'type' => 'float',  'require' => true, 'desc' => '数量'),
+//                'supplierId' => array('name' => 'supplierId', 'type' => 'int',  'require' => true, 'desc' => '供应商ID')
+//            ),
             'updateMaterial' => array(
-                "materialId"=>array('name' => 'materialId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '原料ID'),
-                'factoryId' => array('name' => 'factoryId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '工厂ID'),
-                'name' => array('name' => 'name', 'type' => 'string',  'require' => true, 'desc' => '原料名'),
-                'amount' => array('name' => 'amount', 'type' => 'float',  'require' => true, 'desc' => '数量'),
-                'supplierId' => array('name' => 'supplierId', 'type' => 'int',  'require' => true, 'desc' => '供应商ID')
+                "factoryId" => array('name' => 'factoryId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '工厂ID'),
+                "storage" => array('name' => 'storage', 'type' => 'array', 'require' => true, 'format' => 'json', 'desc' => '原料信息')
             ),
             'deleteMaterial' => array(
                 "materialId"=>array('name' => 'materialId', 'type' => 'int', 'min' => 0, 'require' => true, 'desc' => '原料ID'),
@@ -92,13 +96,22 @@ class Api_Storage extends PhalApi_Api {
         $model=new Model_Material();
         return $model->deleteMaterial($this->materialId);
     }
+//    /**
+//     * 修改原料
+//     * @desc
+//     */
+//    public function updateMaterial() {
+//        $model=new Model_Material();
+//        return $model->updateMaterial($this->materialId,array("factoryId"=>$this->factoryId,"name"=>$this->name,"amount"=>$this->amount,"supplierId"=>$this->supplierId));
+//    }
     /**
-     * 修改原料
-     * @desc
+     * 更新原料
+     * @desc 根据factoryId和原料信息storage更新原料，storage格式为[{"name": "xxx", "amount": n}, …]
      */
     public function updateMaterial() {
-        $model=new Model_Material();
-        return $model->updateMaterial($this->materialId,array("factoryId"=>$this->factoryId,"name"=>$this->name,"amount"=>$this->amount,"supplierId"=>$this->supplierId));
+        $domain = new Domain_Storage();
+        $rs = $domain->updateMaterial($this->factoryId, $this->storage);
+        return $rs;
     }
     /**
      * 添加原料

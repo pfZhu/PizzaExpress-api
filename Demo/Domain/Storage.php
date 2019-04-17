@@ -34,4 +34,21 @@ class Domain_Storage {
         return $model->checkMaterial($materialId,$status);
 
     }
+    public function updateMaterial($factoryId, $storage) {
+        $model = new Model_Material();
+        $nameArr = array();
+        $amountArr = array();
+        foreach($storage as $s) {
+            array_push($nameArr, $s['name']);
+            array_push($amountArr, $s['amount']);
+        }
+        for ($i = 0; $i < count($nameArr); $i++) {
+            $s = array('name' => $nameArr[$i], 'amount' => $amountArr[$i]);
+            $rs = $model->updateMaterial($factoryId, $s);
+            if ($rs === false) {
+                throw new PhalApi_Exception_BadRequest('更新原料信息失败。', 11);
+            }
+        }
+        return 0;
+    }
 }
